@@ -45,4 +45,20 @@ async def build_report(resume, jd, glassdoor, ambitionbox, linkedin, college, co
         raw = raw[3:]
     if raw.endswith("```"):
         raw = raw[:-3]
-    return json.loads(raw.strip())
+        
+    try:
+        return json.loads(raw.strip())
+    except json.decoder.JSONDecodeError as e:
+        print(f"FAILED TO PARSE JSON! Raw LLM Output was:\n{raw}")
+        # Try a quick repair for unterminated JSON chunks coming from OpenRouter stream truncation
+        try:
+            # Attempt to force close the JSON block if the model was cut off mid completion
+            repaired_raw = raw.strip()
+            if not repaired_raw.endswith("}"):
+                if repaired_raw.endswith('"'):
+                    repaired_raw += "}"
+                else:
+                    repaired_raw += '",\n"verdict_reason_cut_off": "true"}'
+            return json.loads(repaired_raw)
+        except Exception as inner_e:
+            raise ValueError(f"CRITICAL LLM OUTPUT FAILURE: Could not parse. Original Error: {e}. Output trace saved to backend logs.")

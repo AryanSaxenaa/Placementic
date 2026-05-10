@@ -34,7 +34,7 @@ export default function Home() {
         college_name: collegeName
       };
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://admesh-testnet.uc.r.appspot.com';
       const response = await fetch(`${apiUrl}/analyze`, {
         method: 'POST',
         headers: {

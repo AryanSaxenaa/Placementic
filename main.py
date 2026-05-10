@@ -16,7 +16,13 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://frontend-dot-admesh-testnet.uc.r.appspot.com",
+        "http://localhost:3000",
+        "http://frontend-dot-admesh-testnet.uc.r.appspot.com",
+        "https://admesh-testnet.uc.r.appspot.com"
+    ],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
