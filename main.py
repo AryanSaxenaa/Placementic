@@ -43,6 +43,10 @@ async def analyze(req: AnalyzeRequest):
     )
     return report
 
+@app.get("/")
+async def root():
+    return {"status": "ok", "message": "Backend is running"}
+
 @app.get("/health")
 async def health():
     return {"status": "ok"}

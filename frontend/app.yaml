@@ -1,0 +1,10 @@
+runtime: nodejs20
+service: frontend
+
+env_variables:
+  # Using the deployed python backend automatically as the API URL
+  NEXT_PUBLIC_API_URL: "https://admesh-testnet.uc.r.appspot.com"
+
+handlers:
+  - url: /.*
+    script: auto
