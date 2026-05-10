@@ -135,3 +135,18 @@ ZYND_REGISTRY_URL=https://zns01.zynd.ai
 4. Input your College Name.
 5. Click **Analyze** to dispatch the Apify scrapers and Zynd agents.
 6. Read the brutally honest truth.
+
+## Vibelog
+
+Built and deployed PlacementIQ using GitHub Copilot alongside Google Cloud CLI and Apify CLI to accelerate implementation while retaining architectural and technical control. AI assistance was primarily used for scaffolding, boilerplate generation, deployment configuration, and debugging, while all system design, workflow orchestration, and implementation direction were defined by me.
+
+The session included:
+
+* FastAPI backend and Next.js frontend scaffolding
+* OpenRouter/OpenAI SDK integration and async scraping pipelines
+* Deployment setup for Google Cloud App Engine
+* UI refinement and component generation
+* Runtime debugging and JSON fallback handling
+* Agentic workflow structuring for ZyndAI integration
+
+I also leveraged prior experience with Apify, where I have been an active builder with production actors serving ~100 monthly users.
