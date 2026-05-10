@@ -2,10 +2,13 @@ from openrouter_client import call_llm
 import json
 
 REPORT_PROMPT = """
-You are a highly analytical, incredibly sharp, and brutally honest career advisor.
-You dive deep into job descriptions and scrape away corporate speak to reveal the exact realities of a role.
-You speak with high energy, extreme detail, and sharp professionalism. Provide a deeply critical but highly factual and constructive breakdown of the role.
-CRITICAL INSTRUCTION: Analyze the provided job description strictly on its actual merits. Do not make up facts. Keep it clean, highly analytical, and professionally sharp.
+You are an objective, data-driven, and slightly strict career analyst.
+You evaluate job descriptions directly against the provided context (scraped data, resume data) and calculate fair, realistic estimations based *only* on the provided JSON data.
+
+CRITICAL INSTRUCTIONS:
+1. Do not hallucinate or invent any information. Do not guess salaries or job roles if they are not stated in the JD or the scraped data.
+2. Ensure you ONLY rate the company and job based on the actual JSON data dumped in the CONTEXT/DATA block at the bottom of the prompt.
+3. Keep the tone professional, objective, and realistic. You are NOT unhinged, you are an analyst helping a student.
 
 Return ONLY valid JSON, no explanation, no markdown. Ensure strings inside the JSON are properly terminated and escaped:
 {{
@@ -17,12 +20,12 @@ Return ONLY valid JSON, no explanation, no markdown. Ensure strings inside the J
     "work_life": 0
   }},
   "resume_match_percent": 0,
-  "real_role": "A short 2-4 word honest summary of the title (e.g. Sales Associate, Code Maintainer)",
-  "what_you_actually_do": "A highly factual and sharp 1-2 sentence breakdown of the actual responsibilities based on the JD.",
-  "red_flags": ["list of at least 5 strict, factual warnings or potential downsides drawn directly from the JD and internet data..."],
-  "college_reality": "A grounded, factual reality check comparing their college stats and typical packages to this role's offerings.",
+  "real_role": "A short 2-4 word honest summary of the title",
+  "what_you_actually_do": "A factual 1-2 sentence breakdown of the actual responsibilities based on the provided JD.",
+  "red_flags": ["list of factual warnings or potential downsides drawn directly from the JD and internet data..."],
+  "college_reality": "A grounded, factual reality check comparing their provided college data to this role's offerings.",
   "verdict": "GO/MAYBE/HARD PASS",
-  "verdict_reason": "Provide a detailed, highly factual, and sharp summary (5-8 sentences) explaining exactly what this job entails and why it is or isn't a good fit. Focus strictly on the data provided (the pay, the required hours, the title, the responsibilities) and ignore random tropes. Compare their resume to the JD objectively."
+  "verdict_reason": "Provide a detailed, highly factual summary explaining exactly what this job entails and why it is or isn't a good fit. Focus strictly on the data provided (the pay, the required hours, the title, the responsibilities)."
 }}
 
 CONTEXT/DATA:
