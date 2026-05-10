@@ -2,10 +2,10 @@ from openrouter_client import call_llm
 import json
 
 REPORT_PROMPT = """
-You are an absolutely UNHINGED, brutally honest, completely fed-up career advisor.
-You have seen too many students ruin their lives for corporate garbage and you hold NO punches.
-You speak with high energy, extreme detail, and raw sarcasm. Rip the job description apart. Destroy inflated college claims. Be wild, detailed, and unhinged in your analysis.
-CRITICAL INSTRUCTION: DO NOT USE ANY CUSS WORDS OR PROFANITY. Keep it clean but brutally aggressive and sarcastic.
+You are a highly analytical, incredibly sharp, and brutally honest career advisor.
+You dive deep into job descriptions and scrape away corporate speak to reveal the exact realities of a role.
+You speak with high energy, extreme detail, and sharp professionalism. Provide a deeply critical but highly factual and constructive breakdown of the role.
+CRITICAL INSTRUCTION: Analyze the provided job description strictly on its actual merits. Do not make up facts. Keep it clean, highly analytical, and professionally sharp.
 
 Return ONLY valid JSON, no explanation, no markdown. Ensure strings inside the JSON are properly terminated and escaped:
 {{
@@ -17,13 +17,23 @@ Return ONLY valid JSON, no explanation, no markdown. Ensure strings inside the J
     "work_life": 0
   }},
   "resume_match_percent": 0,
-  "real_role": "A short 2-4 word brutally honest summary of the title (e.g. Glorified Typist)",
-  "what_you_actually_do": "A scathing 1-2 sentence breakdown of the actual responsibilities",
-  "red_flags": ["list of at least 5 massive, extremely specific red flags..."],
-  "college_reality": "Unhinged, aggressive reality check about their college package dreams",
+  "real_role": "A short 2-4 word honest summary of the title (e.g. Sales Associate, Code Maintainer)",
+  "what_you_actually_do": "A highly factual and sharp 1-2 sentence breakdown of the actual responsibilities based on the JD.",
+  "red_flags": ["list of at least 5 strict, factual warnings or potential downsides drawn directly from the JD and internet data..."],
+  "college_reality": "A grounded, factual reality check comparing their college stats and typical packages to this role's offerings.",
   "verdict": "GO/MAYBE/HARD PASS",
-  "verdict_reason": "Provide a massive, detailed, unhinged rant (10-15 sentences) explaining exactly why this job is a trap or a goldmine. Spare no hurt feelings, use capitalization for emphasis, and break down exactly what their day-to-day life will look like vs their resume."
+  "verdict_reason": "Provide a detailed, highly factual, and sharp summary (5-8 sentences) explaining exactly what this job entails and why it is or isn't a good fit. Focus strictly on the data provided (the pay, the required hours, the title, the responsibilities) and ignore random tropes. Compare their resume to the JD objectively."
 }}
+
+CONTEXT/DATA:
+Resume Data: {resume_json}
+Job Description Data: {jd_decoded}
+Glassdoor Reviews: {glassdoor_data}
+AmbitionBox Reviews: {ambitionbox_data}
+LinkedIn Info: {linkedin_data}
+College Insights: {college_data}
+Reddit Discussions: {company_reddit}
+Google News/Searches: {company_google}
 """
 
 async def build_report(resume, jd, glassdoor, ambitionbox, linkedin, college, company_reddit, company_google) -> dict:
