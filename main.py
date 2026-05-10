@@ -20,7 +20,8 @@ app.add_middleware(
         "https://frontend-dot-admesh-testnet.uc.r.appspot.com",
         "http://localhost:3000",
         "http://frontend-dot-admesh-testnet.uc.r.appspot.com",
-        "https://admesh-testnet.uc.r.appspot.com"
+        "https://admesh-testnet.uc.r.appspot.com",
+        "*"
     ],
     allow_credentials=True,
     allow_methods=["*"],
