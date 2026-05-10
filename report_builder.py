@@ -17,6 +17,8 @@ Return ONLY valid JSON, no explanation, no markdown. Ensure strings inside the J
     "work_life": 0
   }},
   "resume_match_percent": 0,
+  "real_role": "A short 2-4 word brutally honest summary of the title (e.g. Glorified Typist)",
+  "what_you_actually_do": "A scathing 1-2 sentence breakdown of the actual responsibilities",
   "red_flags": ["list of at least 5 massive, extremely specific red flags..."],
   "college_reality": "Unhinged, aggressive reality check about their college package dreams",
   "verdict": "GO/MAYBE/HARD PASS",
