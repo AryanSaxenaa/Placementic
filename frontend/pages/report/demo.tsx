@@ -51,18 +51,41 @@ export default function ReportPage() {
     <div style={{ minHeight: '100vh', fontFamily: "'DM Sans', sans-serif", margin: 0, padding: 0, background: '#FFF5E4', color: '#3D1A00' }}>
       <Head>
         <title>PlacementIQ - Report</title>
-        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Playfair+Display:wght@900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playfair+Display:wght@900&display=swap" rel="stylesheet" />
         <style>{`
           body { margin: 0; padding: 0; }
         `}</style>
       </Head>
 
-      {/* NAV */}
-      <nav style={{ background: '#E8541A', padding: '1.5rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFF5E4', borderBottom: '4px solid #3D1A00' }}>
-        <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 900, fontSize: '1.5rem', cursor: 'pointer' }} onClick={() => window.location.href='/'}>PlacementIQ</div>
-      </nav>
+      <div style={{
+        backgroundImage: 'radial-gradient(#E8541A 2px, transparent 2px)',
+        backgroundSize: '30px 30px',
+        backgroundColor: '#FFF5E4'
+      }}>
+        {/* FLOATING NAV */ }
+        <div style={{ padding: '1.5rem', position: 'sticky', top: 0, zIndex: 100 }}>
+          <nav style={{ 
+            background: '#E8541A', 
+            padding: '1rem 2rem', 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            color: '#FFF5E4',
+            borderRadius: '50px',
+            boxShadow: '0px 8px 0px #3D1A00',
+            border: '2px solid #3D1A00',
+            maxWidth: '1200px',
+            margin: '0 auto'
+          }}>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 900, fontSize: '1.8rem', cursor: 'pointer' }} onClick={() => window.location.href='/'}>PlacementIQ</div>
+            <div style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
+              <a href="/about" style={{ color: '#FFF5E4', textDecoration: 'none' }}>ABOUT</a>
+            </div>
+          </nav>
+        </div>
 
-      <VerdictBanner verdict={reportData.verdict} reason={reportData.verdict_reason} />
+        <VerdictBanner verdict={reportData.verdict} reason={reportData.verdict_reason} />
+      </div>
 
       <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '3rem 2rem' }}>
         
