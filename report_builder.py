@@ -1,5 +1,8 @@
 from openrouter_client import call_llm
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 REPORT_PROMPT = """
 You are an objective, data-driven, and slightly strict career analyst.
@@ -39,7 +42,10 @@ Reddit Discussions: {company_reddit}
 Google News/Searches: {company_google}
 """
 
-async def build_report(resume, jd, glassdoor, ambitionbox, linkedin, college, company_reddit, company_google) -> dict:
+async def build_report(
+    resume: dict, jd: dict, glassdoor: list, ambitionbox: list,
+    linkedin: list, college: list, company_reddit: list, company_google: list
+) -> dict:
     prompt = REPORT_PROMPT.format(
         resume_json=json.dumps(resume),
         jd_decoded=json.dumps(jd),
@@ -51,8 +57,9 @@ async def build_report(resume, jd, glassdoor, ambitionbox, linkedin, college, co
         company_google=json.dumps(company_google)
     )
     raw = await call_llm(prompt)
-    
-    # Strip any potential markdown blocks or leading/trailing whitespace
+    if not raw:
+        raise ValueError("LLM returned empty response")
+
     raw = raw.strip()
     if raw.startswith("```json"):
         raw = raw[7:]
@@ -63,8 +70,8 @@ async def build_report(resume, jd, glassdoor, ambitionbox, linkedin, college, co
         
     try:
         return json.loads(raw.strip())
-    except json.decoder.JSONDecodeError as e:
-        print(f"FAILED TO PARSE JSON! Raw LLM Output was:\n{raw}")
+    except json.JSONDecodeError as e:
+        logger.error("Failed to parse JSON from LLM. Raw output: %s", raw)
         # Try a quick repair for unterminated JSON chunks coming from OpenRouter stream truncation
         try:
             # Attempt to force close the JSON block if the model was cut off mid completion
@@ -75,5 +82,5 @@ async def build_report(resume, jd, glassdoor, ambitionbox, linkedin, college, co
                 else:
                     repaired_raw += '",\n"verdict_reason_cut_off": "true"}'
             return json.loads(repaired_raw)
-        except Exception as inner_e:
-            raise ValueError(f"CRITICAL LLM OUTPUT FAILURE: Could not parse. Original Error: {e}. Output trace saved to backend logs.")
+        except json.JSONDecodeError:
+            raise ValueError(f"CRITICAL LLM OUTPUT FAILURE: Could not parse. Original Error: {e}.")

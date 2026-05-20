@@ -1,18 +1,26 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import asyncio, base64
+import asyncio
+from contextlib import asynccontextmanager
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
+from openrouter_client import client as llm_client
 from resume_parser import parse_resume
 from jd_decoder import decode_jd
 from scraper_runner import scrape_all
 from report_builder import build_report
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app):
+    yield
+    await llm_client.aclose()
+
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,7 +29,6 @@ app.add_middleware(
         "http://localhost:3000",
         "http://frontend-dot-admesh-testnet.uc.r.appspot.com",
         "https://admesh-testnet.uc.r.appspot.com",
-        "*"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -35,8 +42,10 @@ class AnalyzeRequest(BaseModel):
     college_name: str
 
 @app.post("/analyze")
-async def analyze(req: AnalyzeRequest):
-    # Run resume parse, jd decode, and all scrapers in parallel
+async def analyze(req: AnalyzeRequest) -> dict:
+    if len(req.resume_base64) > 15 * 1024 * 1024:
+        raise HTTPException(status_code=413, detail="Resume file too large (max ~10MB PDF)")
+
     resume_task = parse_resume(req.resume_base64)
     jd_task = decode_jd(req.jd_text)
     scrape_task = scrape_all(req.company_name, req.college_name)
@@ -51,9 +60,9 @@ async def analyze(req: AnalyzeRequest):
     return report
 
 @app.get("/")
-async def root():
+async def root() -> dict:
     return {"status": "ok", "message": "Backend is running"}
 
 @app.get("/health")
-async def health():
+async def health() -> dict:
     return {"status": "ok"}

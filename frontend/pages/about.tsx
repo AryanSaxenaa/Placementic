@@ -1,4 +1,3 @@
-import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 
@@ -7,7 +6,7 @@ export default function About() {
     <div style={{ minHeight: '100vh', fontFamily: "'Comic Neue', 'DM Sans', sans-serif", margin: 0, padding: 0, backgroundColor: '#FFF5E4' }}>
       <Head>
         <title>About - PlacementIQ</title>
-        <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playfair+Display:wght@900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playfair+Display:wght@900&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet" />
         <style>{`
           body { margin: 0; padding: 0; background-color: #FFF5E4; }
         `}</style>

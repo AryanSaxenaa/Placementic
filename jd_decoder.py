@@ -1,6 +1,14 @@
 from openrouter_client import call_llm
 import json
 
+FALLBACK_JD = {
+    "real_role": "unknown",
+    "what_you_actually_do": "Unable to determine from the provided job description.",
+    "red_flags": [],
+    "required_skills": [],
+    "seniority_expected": "fresher",
+}
+
 JD_PROMPT = """
 Analyze this job description. Return ONLY valid JSON, no explanation, no markdown:
 {{
@@ -17,4 +25,9 @@ JD:
 
 async def decode_jd(jd_text: str) -> dict:
     raw = await call_llm(JD_PROMPT.format(jd_text=jd_text))
-    return json.loads(raw.strip())
+    if not raw:
+        return FALLBACK_JD
+    try:
+        return json.loads(raw.strip())
+    except json.JSONDecodeError:
+        return FALLBACK_JD

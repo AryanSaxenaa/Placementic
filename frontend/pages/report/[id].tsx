@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-const colors = {
+const VERDICT_COLORS: Record<string, { bg: string; text: string }> = {
   "GO":        { bg: "#F5C842", text: "#3D1A00" },
   "MAYBE":     { bg: "#FFFFFF", text: "#E8541A" },
   "HARD PASS": { bg: "#3D1A00", text: "#FFF5E4" },
 };
 
-function VerdictBanner({ verdict, reason }) {
-  const colorSet = colors[verdict] || colors["MAYBE"];
+function VerdictBanner({ verdict, reason }: { verdict: string; reason: string }) {
+  const colorSet = VERDICT_COLORS[verdict] || VERDICT_COLORS["MAYBE"];
   return (
     <div style={{ background: colorSet.bg, color: colorSet.text, padding: "3rem 2rem", borderBottom: '4px solid #3D1A00' }}>
       <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "5rem", maxWidth: '1200px', margin: '0 auto', fontWeight: 900, textTransform: "uppercase" }}>
@@ -22,7 +23,7 @@ function VerdictBanner({ verdict, reason }) {
   );
 }
 
-function ScoreCard({ label, score }) {
+function ScoreCard({ label, score }: { label: string; score: number }) {
   return (
     <div style={{ background: "#FFF5E4", border: "2px solid #3D1A00", padding: "1.5rem", textAlign: "center", borderRadius: "8px", flex: 1, minWidth: '120px' }}>
       <div style={{ fontSize: "3rem", fontWeight: 900, fontFamily: "'Playfair Display', serif", color: "#E8541A" }}>
@@ -37,13 +38,12 @@ function ScoreCard({ label, score }) {
 
 export default function ReportPage() {
   const router = useRouter();
-  const { id } = router.query;
-  const [reportData, setReportData] = useState(null);
+  const [reportData, setReportData] = useState<Record<string, unknown> | null>(null);
 
   useEffect(() => {
+    if (!router.isReady) return;
+    const { id } = router.query;
     if (id) {
-      // In a real production app, this would fetch from a database by ID.
-      // But for our demo architecture, we passed it via localStorage
       const data = localStorage.getItem(`report_${id}`);
       if (data) {
         setReportData(JSON.parse(data));
@@ -51,13 +51,13 @@ export default function ReportPage() {
         console.error("Report data not found!");
       }
     }
-  }, [id]);
+  }, [router.isReady, router.query]);
 
   return (
     <div style={{ minHeight: '100vh', fontFamily: "'DM Sans', sans-serif", background: '#FFFFFF', color: '#3D1A00' }}>
       <Head>
         <title>PlacementIQ - Report</title>
-        <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playfair+Display:wght@900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playfair+Display:wght@900&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet" />
         <style>{`body { margin: 0; padding: 0; }`}</style>
       </Head>
 
@@ -81,9 +81,11 @@ export default function ReportPage() {
             maxWidth: '1200px',
             margin: '0 auto'
           }}>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 900, fontSize: '1.8rem', cursor: 'pointer' }} onClick={() => window.location.href='/'}>PlacementIQ</div>
+            <Link href="/" style={{ textDecoration: 'none', color: '#FFF5E4' }}>
+              <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 900, fontSize: '1.8rem', cursor: 'pointer' }}>PlacementIQ</div>
+            </Link>
             <div style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
-              <a href="/about" style={{ color: '#FFF5E4', textDecoration: 'none' }}>ABOUT</a>
+              <Link href="/about" style={{ color: '#FFF5E4', textDecoration: 'none' }}>ABOUT</Link>
             </div>
           </nav>
         </div>

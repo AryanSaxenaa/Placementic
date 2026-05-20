@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -6,20 +6,20 @@ import { useRouter } from 'next/router';
 export default function Home() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [resumeFile, setResumeFile] = useState(null);
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [companyName, setCompanyName] = useState('');
   const [jdText, setJdText] = useState('');
   const [collegeName, setCollegeName] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
-  const toBase64 = (file) => new Promise((resolve, reject) => {
+  const toBase64 = (file: File): Promise<string> => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve((reader.result as string).split(',')[1]);
-    reader.onerror = error => reject(error);
+    reader.onerror = (error) => reject(error);
   });
 
-  const handleAnalyze = async (e) => {
+  const handleAnalyze = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setErrorMsg('');
@@ -66,7 +66,7 @@ export default function Home() {
     <div style={{ minHeight: '100vh', fontFamily: "'Comic Neue', 'DM Sans', sans-serif", margin: 0, padding: 0 }}>
       <Head>
         <title>PlacementIQ - The Truth</title>
-        <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playfair+Display:wght@900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Playfair+Display:wght@900&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet" />
         <style>{`
           body { margin: 0; padding: 0; background-color: #FFF5E4; }
         `}</style>
@@ -126,9 +126,9 @@ export default function Home() {
 
                 {/* INPUT FORM */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                  <input type="text" placeholder="Company Name" style={{ padding: '1rem', border: '2px solid #3D1A00', borderRadius: '4px', fontSize: '1rem', fontFamily: 'inherit' }} value={companyName} onChange={(e) => setCompanyName(e.target.value)} required />
-                  <textarea placeholder="Paste Job Description Here..." style={{ padding: '1rem', border: '2px solid #3D1A00', borderRadius: '4px', fontSize: '1rem', minHeight: '140px', fontFamily: 'inherit', resize: 'vertical' }} value={jdText} onChange={(e) => setJdText(e.target.value)} required></textarea>
-                  <input type="text" placeholder="Your College Name" style={{ padding: '1rem', border: '2px solid #3D1A00', borderRadius: '4px', fontSize: '1rem', fontFamily: 'inherit' }} value={collegeName} onChange={(e) => setCollegeName(e.target.value)} required />
+                  <input aria-label="Company Name" type="text" placeholder="Company Name" style={{ padding: '1rem', border: '2px solid #3D1A00', borderRadius: '4px', fontSize: '1rem', fontFamily: 'inherit' }} value={companyName} onChange={(e) => setCompanyName(e.target.value)} required />
+                  <textarea aria-label="Job Description" placeholder="Paste Job Description Here..." style={{ padding: '1rem', border: '2px solid #3D1A00', borderRadius: '4px', fontSize: '1rem', minHeight: '140px', fontFamily: 'inherit', resize: 'vertical' }} value={jdText} onChange={(e) => setJdText(e.target.value)} required></textarea>
+                  <input aria-label="College Name" type="text" placeholder="Your College Name" style={{ padding: '1rem', border: '2px solid #3D1A00', borderRadius: '4px', fontSize: '1rem', fontFamily: 'inherit' }} value={collegeName} onChange={(e) => setCollegeName(e.target.value)} required />
                 </div>
 
                 {/* ACTION BUTTON */}
