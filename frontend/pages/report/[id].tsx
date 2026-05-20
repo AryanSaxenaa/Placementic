@@ -3,6 +3,17 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+interface ReportData {
+  verdict: string;
+  verdict_reason: string;
+  company_scores: { culture: number; pay_fairness: number; growth: number; survival: number; work_life: number };
+  real_role: string;
+  what_you_actually_do: string;
+  red_flags: string[];
+  college_reality: string;
+  resume_match_percent?: number;
+}
+
 const VERDICT_COLORS: Record<string, { bg: string; text: string }> = {
   "GO":        { bg: "#F5C842", text: "#3D1A00" },
   "MAYBE":     { bg: "#FFFFFF", text: "#E8541A" },
@@ -38,7 +49,7 @@ function ScoreCard({ label, score }: { label: string; score: number }) {
 
 export default function ReportPage() {
   const router = useRouter();
-  const [reportData, setReportData] = useState<Record<string, unknown> | null>(null);
+  const [reportData, setReportData] = useState<ReportData | null>(null);
 
   useEffect(() => {
     if (!router.isReady) return;
