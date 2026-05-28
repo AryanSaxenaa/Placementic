@@ -56,17 +56,16 @@ export default function ReportPage() {
   useEffect(() => {
     if (!router.isReady) return;
     const { id } = router.query;
-    if (id) {
-      const data = localStorage.getItem(`report_${id}`);
-      if (data) {
-        try {
-          setReportData(JSON.parse(data));
-        } catch {
-          setError('Failed to parse report data.');
-        }
-      } else {
-        setError('Report not found. It may have been cleared from your browser. Please run a new analysis.');
+    if (!id) return;
+    const data = localStorage.getItem(`report_${id}`);
+    if (data) {
+      try {
+        setReportData(JSON.parse(data));
+      } catch {
+        setError('Failed to parse report data.');
       }
+    } else {
+      setError('Report not found. It may have been cleared from your browser. Please run a new analysis.');
     }
   }, [router.isReady, router.query]);
 
@@ -112,7 +111,7 @@ export default function ReportPage() {
             <ScoreCard label="Survival" score={reportData.company_scores.survival} />
             <ScoreCard label="WLB" score={reportData.company_scores.work_life} />
             {reportData.resume_match_percent != null && (
-              <ScoreCard label="Resume Match" score={reportData.resume_match_percent} />
+              <ScoreCard label="Resume Match" score={Math.round(reportData.resume_match_percent / 10)} />
             )}
           </div>
 

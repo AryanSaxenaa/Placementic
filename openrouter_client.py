@@ -21,7 +21,7 @@ def _get_client() -> AsyncOpenAI:
         )
     return client
 
-async def call_llm(prompt: str, max_tokens: int = 1000) -> str | None:
+async def call_llm(prompt: str, max_tokens: int = 1000):
     c = _get_client()
     messages = [{"role": "user", "content": prompt}]
 

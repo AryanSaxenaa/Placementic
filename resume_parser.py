@@ -33,7 +33,7 @@ Resume text:
 async def parse_resume(pdf_base64: str) -> dict:
     try:
         text = extract_text_from_pdf(pdf_base64)
-    except (fitz.FileDataError, ValueError):
+    except Exception:
         return FALLBACK_RESUME
     raw = await call_llm(RESUME_PROMPT.format(resume_text=text))
     if not raw:

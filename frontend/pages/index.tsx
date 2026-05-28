@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 
@@ -55,9 +54,9 @@ export default function Home() {
       localStorage.setItem(`report_${id}`, JSON.stringify(reportData));
       
       router.push(`/report/${id}`);
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err);
-      setErrorMsg(err.message || 'An error occurred during analysis');
+      setErrorMsg(err instanceof Error ? err.message : 'An error occurred during analysis');
     } finally {
       setLoading(false);
     }
