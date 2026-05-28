@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import Navbar from '../components/Navbar';
 
 export default function About() {
   return (
@@ -13,28 +14,7 @@ export default function About() {
       </Head>
 
       {/* FLOATING NAV */}
-      <div style={{ padding: '1.5rem', position: 'sticky', top: 0, zIndex: 100 }}>
-        <nav style={{ 
-          background: '#E8541A', 
-          padding: '1rem 2rem', 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          color: '#FFF5E4',
-          borderRadius: '50px',
-          boxShadow: '0px 8px 0px #3D1A00',
-          border: '2px solid #3D1A00',
-          maxWidth: '1200px',
-          margin: '0 auto'
-        }}>
-          <Link href="/" style={{ textDecoration: 'none', color: '#FFF5E4' }}>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 900, fontSize: '1.8rem', cursor: 'pointer' }}>PlacementIQ</div>
-          </Link>
-          <div style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
-            <Link href="/about" style={{ color: '#FFF5E4', textDecoration: 'none' }}>ABOUT</Link>
-          </div>
-        </nav>
-      </div>
+      <Navbar />
 
       <section style={{ maxWidth: '800px', margin: '4rem auto', padding: '2rem', background: '#FFFFFF', borderRadius: '16px', border: '3px solid #3D1A00', boxShadow: '8px 8px 0px #3D1A00', color: '#3D1A00' }}>
         <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '3rem', borderBottom: '4px dashed #E8541A', paddingBottom: '1rem', marginBottom: '2rem' }}>What is PlacementIQ?</h1>

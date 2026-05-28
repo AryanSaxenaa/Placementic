@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from openrouter_client import client as llm_client
+from openrouter_client import _get_client
 from resume_parser import parse_resume
 from jd_decoder import decode_jd
 from scraper_runner import scrape_all
@@ -17,7 +17,6 @@ from fastapi.middleware.cors import CORSMiddleware
 @asynccontextmanager
 async def lifespan(app):
     yield
-    await llm_client.aclose()
 
 
 app = FastAPI(lifespan=lifespan)
@@ -43,6 +42,14 @@ class AnalyzeRequest(BaseModel):
 
 @app.post("/analyze")
 async def analyze(req: AnalyzeRequest) -> dict:
+    from openrouter_client import OPENROUTER_API_KEY
+    from scraper_runner import APIFY_TOKEN
+
+    if not OPENROUTER_API_KEY:
+        raise HTTPException(status_code=503, detail="OPENROUTER_API_KEY is not configured on the server.")
+    if not APIFY_TOKEN:
+        raise HTTPException(status_code=503, detail="APIFY_TOKEN is not configured on the server. Scraping will be skipped.")
+
     if len(req.resume_base64) > 15 * 1024 * 1024:
         raise HTTPException(status_code=413, detail="Resume file too large (max ~10MB PDF)")
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import Navbar from '../../components/Navbar';
 
 interface ReportData {
   verdict: string;
@@ -50,6 +51,7 @@ function ScoreCard({ label, score }: { label: string; score: number }) {
 export default function ReportPage() {
   const router = useRouter();
   const [reportData, setReportData] = useState<ReportData | null>(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -57,9 +59,13 @@ export default function ReportPage() {
     if (id) {
       const data = localStorage.getItem(`report_${id}`);
       if (data) {
-        setReportData(JSON.parse(data));
+        try {
+          setReportData(JSON.parse(data));
+        } catch {
+          setError('Failed to parse report data.');
+        }
       } else {
-        console.error("Report data not found!");
+        setError('Report not found. It may have been cleared from your browser. Please run a new analysis.');
       }
     }
   }, [router.isReady, router.query]);
@@ -78,29 +84,15 @@ export default function ReportPage() {
         backgroundColor: '#FFF5E4'
       }}>
         {/* FLOATING NAV */}
-        <div style={{ padding: '1.5rem', position: 'sticky', top: 0, zIndex: 100 }}>
-          <nav style={{ 
-            background: '#E8541A', 
-            padding: '1rem 2rem', 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center', 
-            color: '#FFF5E4',
-            borderRadius: '50px',
-            boxShadow: '0px 8px 0px #3D1A00',
-            border: '2px solid #3D1A00',
-            maxWidth: '1200px',
-            margin: '0 auto'
-          }}>
-            <Link href="/" style={{ textDecoration: 'none', color: '#FFF5E4' }}>
-              <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 900, fontSize: '1.8rem', cursor: 'pointer' }}>PlacementIQ</div>
+        <Navbar />
+        {error ? (
+          <div style={{ padding: "5rem", textAlign: "center" }}>
+            <div style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#E8541A", marginBottom: "1rem" }}>{error}</div>
+            <Link href="/" style={{ fontSize: "1.2rem", color: "#3D1A00", fontWeight: "bold", textDecoration: "underline" }}>
+              Go back and run a new analysis
             </Link>
-            <div style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
-              <Link href="/about" style={{ color: '#FFF5E4', textDecoration: 'none' }}>ABOUT</Link>
-            </div>
-          </nav>
-        </div>
-        {!reportData ? (
+          </div>
+        ) : !reportData ? (
           <div style={{ padding: "5rem", textAlign: "center", fontSize: "1.5rem", fontWeight: "bold" }}>
             Loading Truth...
           </div>
@@ -119,6 +111,9 @@ export default function ReportPage() {
             <ScoreCard label="Growth" score={reportData.company_scores.growth} />
             <ScoreCard label="Survival" score={reportData.company_scores.survival} />
             <ScoreCard label="WLB" score={reportData.company_scores.work_life} />
+            {reportData.resume_match_percent != null && (
+              <ScoreCard label="Resume Match" score={reportData.resume_match_percent} />
+            )}
           </div>
 
           {/* TWO COLUMNS */}

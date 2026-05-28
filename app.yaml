@@ -1,6 +1,8 @@
 runtime: python312
 entrypoint: gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app
 
-env_variables:
-  OPENROUTER_API_KEY: "insert_your_openrouter_api_key_here"
-  APIFY_TOKEN: "insert_your_apify_token_here"
+# Set these via GCP Console > App Engine > Settings > Environment variables
+# or use a .env file for local development.
+# env_variables:
+#   OPENROUTER_API_KEY: "your-key-here"
+#   APIFY_TOKEN: "your-token-here"
